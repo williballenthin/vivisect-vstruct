@@ -1,4 +1,6 @@
+__version__ = "20150601"
 import struct
+import primitives
 
 from inspect import isclass
 from StringIO import StringIO
