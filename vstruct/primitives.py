@@ -749,7 +749,7 @@ class enum_uint16(enum_mixin, v_uint16):
         super(enum_uint16, self).__init__(enum)
 
 
-class enum_uint32(enum_mixin, v_uint8):
+class enum_uint32(enum_mixin, v_uint32):
     def __init__(self, enum):
         super(enum_uint32, self).__init__(enum)
 
