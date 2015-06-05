@@ -1,4 +1,6 @@
 import struct
+from binascii import b2a_hex
+
 
 class v_enum(object):
     def __init__(self):
@@ -116,6 +118,13 @@ num_fmts = {
     (False,4):'<I',
     (False,8):'<Q',
 }
+
+
+import sys
+if sys.version_info[0] >= 3:
+    def long(i):
+        return int(i)
+
 
 class v_number(v_prim):
     _vs_length = 1
@@ -461,6 +470,7 @@ class v_float(v_prim):
 class v_double(v_float):
     _vs_length = 8
 
+
 class v_bytes(v_prim):
 
     '''
@@ -472,7 +482,7 @@ class v_bytes(v_prim):
     def __init__(self, size=0, vbytes=None):
         v_prim.__init__(self)
         if vbytes == None:
-            vbytes = '\x00' * size
+            vbytes = b'\x00' * size
         self._vs_length = len(vbytes)
         self._vs_value = vbytes
         self._vs_align = 1
@@ -497,10 +507,10 @@ class v_bytes(v_prim):
         self._vs_fmt = '%ds' % size
         # Either chop or expand my string...
         b = self._vs_value[:size]
-        self._vs_value = b.ljust(size, '\x00')
+        self._vs_value = b.ljust(size, b'\x00')
 
     def __repr__(self):
-        return self._vs_value.encode('hex')
+        return b2a_hex(self._vs_value).decode("ascii")
 
 class v_str(v_prim):
     '''
@@ -515,7 +525,7 @@ class v_str(v_prim):
         v_prim.__init__(self)
         self._vs_length = size
         self._vs_fmt = '%ds' % size
-        self._vs_value = val.ljust(size, '\x00')
+        self._vs_value = val.ljust(size, '\x00').encode("ascii")
         self._vs_align = 1
 
     def vsParse(self, fbytes, offset=0):
@@ -527,11 +537,11 @@ class v_str(v_prim):
         return self._vs_value
 
     def vsGetValue(self):
-        s = self._vs_value.split("\x00")[0]
+        s = self._vs_value.split(b"\x00")[0].decode("ascii")
         return s
 
     def vsSetValue(self, val):
-        self._vs_value = val.ljust(self._vs_length, '\x00')
+        self._vs_value = val.ljust(self._vs_length, b'\x00')
 
     def vsSetLength(self, size):
         size = int(size)
@@ -539,7 +549,7 @@ class v_str(v_prim):
         self._vs_fmt = '%ds' % size
         # Either chop or expand my string...
         b = self._vs_value[:size]
-        self._vs_value = b.ljust(size, '\x00')
+        self._vs_value = b.ljust(size, b'\x00')
 
 class v_zstr(v_prim):
     '''
@@ -552,10 +562,10 @@ class v_zstr(v_prim):
     def __init__(self, val='', align=1):
         v_prim.__init__(self)
         self._vs_align = align
-        self.vsParse(val+'\x00')
+        self.vsParse(val.encode("ascii") + b'\x00')
 
     def vsParse(self, fbytes, offset=0):
-        nulloff = fbytes.find('\x00', offset)
+        nulloff = fbytes.find(b'\x00', offset)
         if nulloff == -1:
             raise Exception('v_zstr found no NULL terminator!')
 
@@ -572,13 +582,13 @@ class v_zstr(v_prim):
         return self._vs_value
 
     def vsGetValue(self):
-        return self._vs_value[:-self._vs_align_pad]
+        return self._vs_value[:-self._vs_align_pad].decode("ascii")
 
     def vsSetValue(self, val):
         # FIXME: just call vsParse?
         length = len(val)
         diff = self._vs_align - (length % self._vs_align)
-        self._vs_value = val + '\x00'*(diff)
+        self._vs_value = val.encode("ascii") + b'\x00'*(diff)
         self._vs_length = len(self._vs_value)
         self._vs_align_pad = diff
 
