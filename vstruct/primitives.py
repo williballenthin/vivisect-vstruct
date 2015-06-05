@@ -240,7 +240,7 @@ class v_number(v_prim):
     def __coerce__(self, other):
         try:
             return long(self),long(other)
-        except Exception, e:
+        except Exception as e:
             return NotImplemented
 
     # Print helpers
@@ -451,7 +451,7 @@ class v_float(v_prim):
     def __coerce__(self, other):
         try:
             return double(self),double(other)
-        except Exception, e:
+        except Exception as e:
             return NotImplemented
 
     # Print helpers

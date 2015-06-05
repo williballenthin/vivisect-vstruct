@@ -1,11 +1,17 @@
 __version__ = "20150601"
 import struct
-import primitives
+
+import vstruct.primitives
+import vstruct.primitives as vs_prims
 
 from inspect import isclass
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
-import vstruct.primitives as vs_prims
+
+
 
 def isVstructType(x):
     return isinstance(x, vs_prims.v_base)
@@ -554,4 +560,3 @@ def getStructNames(modname):
             ret.append(n)
 
     return ret
-

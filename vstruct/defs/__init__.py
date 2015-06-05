@@ -1,6 +1,6 @@
 
 # Import all local structure modules
-import elf
-import pe
-import win32
+import vstruct.defs.elf
+import vstruct.defs.pe
+import vstruct.defs.win32
 
