@@ -1,4 +1,4 @@
-__version__ = "20150601"
+__version__ = "1.0.1b1"
 import struct
 
 import vstruct.primitives
@@ -532,16 +532,18 @@ def resolvepath(impmod, pathstr):
     nameparts = pathstr.split('.')
     return resolve(impmod, nameparts)
 
+py3_comment = """
 # NOTE: Gotta import this *after* VStruct/VSArray defined
+import vstruct.defs
 import vstruct.defs as vs_defs
 
 def getStructure(sname):
-    """
+    \"""
     Return an instance of the specified structure.  The
     structure name may be a definition that was added with
     addStructure() or a python path (ie. win32.TEB) of a
     definition from within vstruct.defs.
-    """
+    \"""
     x = resolve(vs_defs, sname.split("."))
     if x != None:
         return x()
@@ -563,3 +565,4 @@ def getStructNames(modname):
             ret.append(n)
 
     return ret
+"""
