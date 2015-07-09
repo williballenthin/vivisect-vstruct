@@ -56,7 +56,7 @@ class VStructBuilder:
         if vsdef != None:
             return VStructConstructor(self, name)
 
-        raise AttributeError, name
+        raise AttributeError(name)
 
     def getVStructCtorNames(self):
         return self._vs_ctors.keys()
@@ -290,8 +290,8 @@ if __name__ == '__main__':
     e = parser._sym_enums.values()
     builder = VStructBuilder(defs=t, enums=e)
 
-    print '# Version: %d.%d' % (osmajor, osminor)
-    print '# Architecture: %s' % archname
+    print('# Version: %d.%d' % (osmajor, osminor))
+    print('# Architecture: %s' % archname)
     if vsver != None:
         keys = vsver.getVersionKeys()
         keys.sort()
@@ -299,6 +299,6 @@ if __name__ == '__main__':
             val = vsver.getVersionValue(k)
             if type(val) == unicode:
                 val = val.encode('ascii','ignore')
-            print '# %s: %s' % (k,val)
-    print builder.genVStructPyCode()
+            print('# %s: %s' % (k,val))
+    print(builder.genVStructPyCode())
 
