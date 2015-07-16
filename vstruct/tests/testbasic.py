@@ -2,6 +2,7 @@ import unittest
 
 import vstruct
 from vstruct.primitives import *
+from vstruct.bitfield import *
 
 from cStringIO import StringIO
 
@@ -151,7 +152,6 @@ class VStructTest(unittest.TestCase):
         self.assertEqual( v[2], 0x41 )
 
     def test_bitfield(self):
-        from vstruct.bitfield import *
         v = VBitField()
         v.vsAddField('w', v_bits(2))
         v.vsAddField('x', v_bits(3))
