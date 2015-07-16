@@ -137,7 +137,11 @@ class VStruct(vs_prims.v_base):
         # In order for callbacks to change fields, we can't use vsGetFields()
         for fname in self._vs_fields:
             fobj = self._vs_values.get(fname)
-            offset = fobj.vsParse(sbytes, offset=offset)
+            try:
+                offset = fobj.vsParse(sbytes, offset=offset)
+            except struct.error as e:
+                raise struct.error("Failed to parse field `{:s}.{:s}` at offset {:s}".format(
+                    self.__class__.__name__, fname, hex(offset))) from e
             self._vsFireCallbacks(fname)
         return offset
 
