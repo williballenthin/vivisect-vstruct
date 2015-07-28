@@ -609,6 +609,56 @@ class v_zstr(v_prim):
     def vsSetLength(self, size):
         raise Exception('Cannot vsSetLength on v_zstr! (its dynamic)')
 
+class v_zstr_utf8(v_prim):
+    '''
+    UTF-8(ish) variant of the above string class.
+    UTF-8 may support embedded NULLs, so the the end-of-string detection may be broken.
+      However, I've never seen this.
+
+    This class also attempts to support invalidly encoded utf8.
+
+    NOTE: the size paramater is in bytes!
+    '''
+
+    _vs_builder = True
+
+    def __init__(self, val='', align=1):
+        v_prim.__init__(self)
+        self._vs_align = align
+        self.vsParse(val.encode("utf-8") + b'\x00')
+
+    def vsParse(self, fbytes, offset=0):
+        # HACK: this is not totally correct. utf8 can have embedded nulls, i think.
+        nulloff = fbytes.find(b'\x00', offset)
+        if nulloff == -1:
+            raise Exception('v_zstr_utf8 found no NULL terminator!')
+
+        # align things correctly
+        diff = self._vs_align - ((nulloff-offset) % self._vs_align)
+        self._vs_align_pad = diff
+        nulloff += diff
+
+        self._vs_value = fbytes[offset : nulloff]
+        self._vs_length = len(self._vs_value)
+        return nulloff
+
+    def vsEmit(self):
+        return self._vs_value
+
+    def vsGetValue(self):
+        return self._vs_value[:-self._vs_align_pad].decode("utf-8", errors="replace")
+
+    def vsSetValue(self, val):
+        # FIXME: just call vsParse?
+        length = len(val)
+        diff = self._vs_align - (length % self._vs_align)
+        self._vs_value = val.encode("utf-8") + b'\x00'*(diff)
+        self._vs_length = len(self._vs_value)
+        self._vs_align_pad = diff
+
+    def vsSetLength(self, size):
+        raise Exception('Cannot vsSetLength on v_zstr_utf8! (its dynamic)')
+
 class v_wstr(v_str):
     '''
     Unicode variant of the above string class
