@@ -1,3 +1,4 @@
+import sys
 import struct
 
 import vstruct.primitives
@@ -140,7 +141,7 @@ class VStruct(vs_prims.v_base):
                 offset = fobj.vsParse(sbytes, offset=offset)
             except struct.error as e:
                 raise struct.error("Failed to parse field `{:s}.{:s}` at offset {:s}".format(
-                    self.__class__.__name__, fname, hex(offset))) from e
+                    self.__class__.__name__, fname, hex(offset)))
             self._vsFireCallbacks(fname)
         return offset
 

@@ -5,7 +5,7 @@ from setuptools import setup
 
 description = "Unofficial packaged vivisect vstruct mirror."
 setup(name="vivisect-vstruct-wb",
-      version="1.0.2",
+      version="1.0.3",
       description=description,
       long_description=description,
       url="https://github.com/williballenthin/vivisect-vstruct",
