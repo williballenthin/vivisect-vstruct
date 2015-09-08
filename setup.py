@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
-from vstruct import __version__
 from setuptools import setup
 
 
 description = "Unofficial packaged vivisect vstruct mirror."
 setup(name="vivisect-vstruct-wb",
-      version=__version__,
+      version="1.0.2",
       description=description,
       long_description=description,
       url="https://github.com/williballenthin/vivisect-vstruct",
