@@ -1,7 +1,7 @@
-import envi.bits as ebits
 from vstruct import VStruct
 from vstruct.primitives import *
 from binascii import unhexlify
+from binascii import hexlify
 
 class v_bits(v_number):
 
@@ -88,7 +88,7 @@ class VBitField(VStruct):
                 endround = 1
 
             fieldbytes = bytez[offset + startbyte:offset+endbyte+endround]
-            rawint = int( fieldbytes.encode('hex'), 16)
+            rawint = int( hexlify(fieldbytes), 16)
             if endshift:
             #if bitshift:
                 rawint >>= endshift

@@ -1,3 +1,4 @@
+import sys
 import struct
 from binascii import b2a_hex
 
@@ -183,12 +184,15 @@ class v_number(v_prim):
 
         r = []
         for i in range(self._vs_length):
-            r.append( chr( (self._vs_value >> (i*8)) & 0xff) )
+            r.append(  (self._vs_value >> (i*8)) & 0xff )
 
         if self._vs_bigend:
             r.reverse()
 
-        return ''.join(r)
+        if sys.version_info < (3, 0):
+            return ''.join(map(chr, r))
+        else:
+            return bytes(r)
 
     def vsSetValue(self, value):
         self._vs_value = long(value & self.maxval)
@@ -555,7 +559,7 @@ class v_str(v_prim):
         return s
 
     def vsSetValue(self, val):
-        self._vs_value = val.ljust(self._vs_length, b'\x00')
+        self._vs_value = val.encode('ascii').ljust(self._vs_length, b'\x00')
 
     def vsSetLength(self, size):
         size = int(size)
@@ -690,7 +694,7 @@ class v_wstr(v_str):
 
     def vsSetValue(self, val):
         rbytes = val.encode(self._vs_encode)
-        self._vs_value = rbytes.ljust(len(self), '\x00')
+        self._vs_value = rbytes.ljust(len(self), b'\x00')
 
     def vsGetValue(self):
         s = self._vs_value.decode(self._vs_encode)
