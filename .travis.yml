@@ -16,5 +16,5 @@ install:
 # its not worth doing flake8 due to all the defs (which are many, many lines of src)
 
 script:
-    - py.test ./tests/testbasic.py -v --cov=vstruct
-    - py.test ./tests/tests_vstruct.py -v --cov=vstruct
+    - py.test ./vstruct/tests/testbasic.py -v --cov=vstruct
+    - py.test ./vstruct/tests/tests_vstruct.py -v --cov=vstruct
