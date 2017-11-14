@@ -123,17 +123,8 @@ class VStruct(vs_prims.v_base):
         Any method named pcb_<FieldName> will be called back when the specified
         field is set by the parser.
 
-        the "fast" option enables fastparse which will *not* call any callbacks
-        can may not be compatible with some structure defs.  ( eg mixed endian )
+        the fast argument is deprecated and ignored for py3 compatibility.
         """
-        if fast:
-            if self._vs_fastfields == None:
-                self._vsInitFastFields()
-            values = struct.unpack_from( self._vs_fastfmt, sbytes, offset )
-            # Ephemeral list comprehension for speed
-            [ self._vs_fastfields[i].vsSetValue( values[i] ) for i in range(len(values)) ]
-            return offset + self._vs_fastlen
-
         # In order for callbacks to change fields, we can't use vsGetFields()
         for fname in self._vs_fields:
             fobj = self._vs_values.get(fname)
